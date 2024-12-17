@@ -1,0 +1,171 @@
+# --- Target ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# --- STS (Spring Tool Suite) ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# --- Eclipse ---
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.externalToolBuilders/
+*.launch
+.factorypath
+.buildpath
+.target
+.tern-project
+.texlipse
+.cache-main
+.scala_dependencies
+.worksheet
+
+# Eclipse Patch
+.project
+.classpath
+.apt_generated
+.sts4-cache/
+
+# --- Git ---
+*.orig
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*_BACKUP_*.txt
+*_BASE_*.txt
+*_LOCAL_*.txt
+*_REMOTE_*.txt
+
+# --- Java ---
+*.class
+*.log
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# --- Maven ---
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Windows ---
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# --- IntelliJ IDEA ---
+# Ignore IntelliJ IDEA specific files
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# --- NetBeans ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# --- Visual Studio Code ---
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# --- Node ---
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# --- Angular ---
+# Angular specific
+/.angular/
+.angular/
+.angular/cache/
+*.ngfactory.*
+*.ngsummary.*
+*.tsbuildinfo
+
+# --- IDEs & Editors ---
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# --- Miscellaneous ---
+.DS_Store
+.sass-cache/
+.connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+.angular/cache
+*.DS_Store
+Thumbs.db
+
+# --- Compiled output ---
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# --- General ignores ---
+*.sw?
+.#*
+*#
+*~
+.sublime-*
+/scratch
+.gradle
+README.html
+.exercism
+
+# --- HELP.md ---
+HELP.md
