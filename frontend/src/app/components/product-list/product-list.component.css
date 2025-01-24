@@ -1,0 +1,5 @@
+.table img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+}
