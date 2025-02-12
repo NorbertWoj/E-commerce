@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -14,6 +14,8 @@ export class SearchComponent {
 
   doSearch(value: string){
     console.log(`value=${value}`);
-    this.router.navigateByUrl(`/search/${value}`);
+
+    // used the function encodeURIComponent to escape special characters for http requests
+    this.router.navigateByUrl(`/search/${encodeURIComponent(value)}`);
   }
 }
