@@ -1,21 +1,26 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
+  searchValue: string = '';
 
   constructor(private router: Router) {}
 
-  doSearch(value: string){
-    console.log(`value=${value}`);
+  doSearch() {
+    const trimmedValue = this.searchValue?.trim();
 
-    // used the function encodeURIComponent to escape special characters for http requests
-    this.router.navigateByUrl(`/search/${encodeURIComponent(value)}`);
+    if (!trimmedValue) {
+      return;
+    }
+
+    this.router.navigateByUrl(`/search/${encodeURIComponent(trimmedValue)}`);
   }
 }

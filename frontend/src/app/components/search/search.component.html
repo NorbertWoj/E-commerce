@@ -1,11 +1,13 @@
 <div class="form-header">
-    
-    <input #myInput type="text" 
+    <input [(ngModel)]="searchValue" 
+           type="text" 
            placeholder="Search for data ..."
-           class="au-input au-input-xl" 
-           (keyup.enter)="doSearch(myInput.value)"/>
-    
-    <button (click)="doSearch(myInput.value)" class="au-btn-submit">
+           class="au-input au-input-xl"
+           (keydown.enter)="doSearch()"/> <!-- 🔥 Bez $event -->
+
+    <button (click)="doSearch()" 
+            [disabled]="!searchValue.trim()" 
+            class="au-btn-submit">
         Search
     </button>
 </div>
