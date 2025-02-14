@@ -2,21 +2,23 @@ import { Component } from '@angular/core';
 import { Product } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
 
-  product: Product | undefined;
+  product!: Product;
 
   constructor(private productService: ProductService,
-              private route: ActivatedRoute) {}
-  
+              private route: ActivatedRoute,
+            private _location: Location) {}
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(() => {
       this.handleProductDetails();
@@ -32,5 +34,9 @@ export class ProductDetailsComponent {
         this.product = data;
       }
     )
+  }
+
+  goToPreviousPage(): void{
+    this._location.back();
   }
 }
