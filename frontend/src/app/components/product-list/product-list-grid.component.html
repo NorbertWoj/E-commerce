@@ -35,7 +35,7 @@
             <!-- begin footer-->
             <div class="footer-pagination">
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
-                    
+
                     <div class="flex-grow-1 d-flex justify-content-center">
                         <ngb-pagination [(page)]="thePageNumber"
                                         [pageSize]="thePageSize"
@@ -43,18 +43,18 @@
                                         (pageChange)="listProducts()">
                         </ngb-pagination>
                     </div>
-            
+
                     <!-- Page Size po prawej -->
                     <div class="d-flex align-items-center mt-2 mt-md-0">
                         <span class="me-2">Page Size</span>
-                        <select class="form-select w-auto">
+                        <select #myPageSelect class="form-select w-auto" (change)="updatePageSize(myPageSelect.value)">
                             <option selected>5</option>
                             <option>10</option>
                             <option>20</option>
                             <option>50</option>
                         </select>
                     </div>
-            
+
                 </div>
              </div>
             <!-- end footer-->
