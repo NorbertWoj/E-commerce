@@ -40,11 +40,12 @@
                         <ngb-pagination [(page)]="thePageNumber"
                                         [pageSize]="thePageSize"
                                         [collectionSize]="theTotalElements"
+                                        [maxSize]="5"
+                                        [boundaryLinks]="true"
                                         (pageChange)="listProducts()">
                         </ngb-pagination>
                     </div>
 
-                    <!-- Page Size po prawej -->
                     <div class="d-flex align-items-center mt-2 mt-md-0">
                         <span class="me-2">Page Size</span>
                         <select #myPageSelect class="form-select w-auto" (change)="updatePageSize(myPageSelect.value)">
