@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../services/cart.service';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-cart-status',
   standalone: true,
-  imports: [ ],
+  imports: [ CommonModule ],
   templateUrl: './cart-status.component.html',
   styleUrl: './cart-status.component.css'
 })
