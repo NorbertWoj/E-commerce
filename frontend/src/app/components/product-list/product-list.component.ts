@@ -4,6 +4,8 @@ import { Product } from '../../common/product';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { CartItem } from '../../common/cart-item';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -29,7 +31,8 @@ export class ProductListComponent {
   previousKeyword: string = "";
 
   constructor(private productService: ProductService,
-    private route: ActivatedRoute) { }
+              private cartService: CartService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(() => {
@@ -122,6 +125,9 @@ export class ProductListComponent {
     addToCart(theProduct: Product) {
       console.log(`Adding to cart: ${theProduct.name}, ${theProduct.unitPrice}`);
 
-      // TODO ... 
+      const theCartItem = new CartItem(theProduct);
+
+      this.cartService.addToCart(theCartItem);
+
       }
 }
