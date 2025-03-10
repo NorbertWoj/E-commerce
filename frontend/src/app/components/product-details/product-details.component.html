@@ -1,16 +1,18 @@
 <div class="detail-section">
     <div class="container-fluid">
-        <img src="{{ product.imageUrl }}" class="detail-img" alt="product_image">
+        <div *ngIf="product">
+            <img src="{{ product.imageUrl }}" class="detail-img" alt="{{ product.name }}">
 
-        <h3>{{ product.name }}</h3>
-        <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
-        <a href="#" class="primary-btn">Add to cart</a>
+            <h3>{{ product.name }}</h3>
+            <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
+            <button (click)="addToCart()" class="btn btn-primary btn-sm">Add to cart</button>
 
-        <hr>
-        <h4>Description</h4>
-        <p>{{ product.description }}</p>
+            <hr>
+            <h4>Description</h4>
+            <p>{{ product.description }}</p>
 
-        <a (click)="goToPreviousPage()" class="primary-btn link-style" role="link">Back to previous page</a>
+            <a (click)="goToPreviousPage()" class="primary-btn link-style" role="link">Back to previous page</a>
 
+        </div>    
     </div>
 </div>
