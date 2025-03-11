@@ -1,0 +1,12 @@
+.table-bordered tr td,.table-bordered tr th{
+    border:1px solid #dee2e6
+}
+table.table.table-bordered th{
+    BACKGROUND:#0da8e4;
+    color:#fff;
+    font-size:14px;
+    padding:7px
+}
+.product-image { width: 20%; }
+.product-detail { width: 50%; }
+.product-action { width: 30%; }
