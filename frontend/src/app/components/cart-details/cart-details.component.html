@@ -1,38 +1,42 @@
 <div class="main-content">
-    <div class="section-content section-content-p30">
-        <div class="container-fluid">
-            <table class="table table-bordered">
-                <tr>
-                    <th class="product-image">Product Image</th>
-                    <th class="product-detail">Product Detail</th>
-                    <th class="product-action"></th>
-                </tr>
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <div *ngIf="cartItems.length > 0" >
+        <table class="table table-bordered">
+          <tr>
+            <th class="product-image">Product Image</th>
+            <th class="product-detail">Product Detail</th>
+            <th class="product-action"></th>
+          </tr>
 
-                <tr *ngFor="let tempCartItem of cartItems">
-                  <td>
-                    <img routerLink="/products/{{tempCartItem.id}}" src="{{ tempCartItem.imageUrl }}" class="img-responsive img-table-width link-style" alt="product-img">
-                  </td>
-                  <td>
-                    <p>{{ tempCartItem.name }}</p>
-                    <p>{{ tempCartItem.unitPrice | currency: "USD" }}</p>
-                  </td>
-                  <td>
-                    <div class="items">
-                        <label>Quantity:</label> {{ tempCartItem.quantity }}
-                    </div>
-                    <p class="mt-2">Subtotal: {{ (tempCartItem.quantity * tempCartItem.unitPrice).toFixed(2) }}</p>
-                  </td>
-                </tr>
-                    <td colspan="2"></td>
-                    <td class="total-quantity-cart-details">
-                        <p>Total Quantity: {{ totalQuantity }}</p>
-                        <p>Shipping: FREE</p>
-                        <p>Total Price: {{ totalPrice | currency: "USD" }}</p>
-                    </td>
-                <tr>
-
-                </tr>
-            </table>
-        </div>
+          <tr *ngFor="let tempCartItem of cartItems">
+            <td>
+              <img routerLink="/products/{{tempCartItem.id}}" src="{{ tempCartItem.imageUrl }}"
+                class="img-responsive img-table-width link-style" alt="product-img">
+            </td>
+            <td>
+              <p>{{ tempCartItem.name }}</p>
+              <p>{{ tempCartItem.unitPrice | currency: "USD" }}</p>
+            </td>
+            <td>
+              <div class="items">
+                <label>Quantity:</label> {{ tempCartItem.quantity }}
+              </div>
+              <p class="mt-2">Subtotal: {{ (tempCartItem.quantity * tempCartItem.unitPrice).toFixed(2) }}</p>
+            </td>
+          </tr>
+          <td colspan="2"></td>
+          <td class="total-quantity-cart-details">
+            <p>Total Quantity: {{ totalQuantity }}</p>
+            <p>Shipping: FREE</p>
+            <p>Total Price: {{ totalPrice | currency: "USD" }}</p>
+          </td>
+        </table>
+      </div>
+      
+      <div *ngIf="cartItems.length == 0" class="alert alert-warning col-md-12" role="alert">
+        Your shopping cart is empty.
+      </div>
     </div>
+  </div>
 </div>
