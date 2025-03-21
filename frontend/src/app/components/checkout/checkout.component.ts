@@ -89,4 +89,33 @@ export class CheckoutComponent implements OnInit{
     console.log("The email address is " + this.checkoutFormGroup.get('customer')?.value.email);
   }
 
+  handleMonthsAndYears() {
+    const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
+    const currentYear: number = new Date().getFullYear();
+    const selectedYear: number = Number(creditCardFormGroup.value.expirationYear);
+
+    let startMonth: number;
+
+    if (currentYear === selectedYear) {
+        // If the selected year is the current year, set the start month to the current month
+        startMonth = new Date().getMonth() + 1;
+        
+        // Reset the selected month if it is earlier than the allowed start month
+        const selectedMonth = Number(creditCardFormGroup.value.expirationMonth);
+        if (selectedMonth < startMonth) {
+            creditCardFormGroup.patchValue({ expirationMonth: startMonth });
+        }
+    } else {
+        // If a future year is selected, allow all months
+        startMonth = 1;
+    }
+
+    // Fetch and update the list of available credit card months
+    this.snapShopFormService.getCreditCardMonths(startMonth).subscribe(
+        data => {
+            console.log("Retrieved credit card months: " + JSON.stringify(data));
+            this.creditCardMonths = data;
+        }
+    );
+  }
 }
