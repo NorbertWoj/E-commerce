@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SnapShopFormService } from '../../services/snap-shop-form.service';
+import { Country } from '../../common/country';
+import { State } from '../../common/state';
 
 @Component({
   selector: 'app-checkout',
@@ -19,6 +21,11 @@ export class CheckoutComponent implements OnInit{
 
   creditCardYears: number[] = [];
   creditCardMonths: number[] = [];
+
+  countries: Country[] = [];
+
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private snapShopFormService: SnapShopFormService) {};
@@ -72,14 +79,31 @@ export class CheckoutComponent implements OnInit{
         this.creditCardYears = data;
       }
     );
+
+    // populate countries
+    this.snapShopFormService.getCountries().subscribe(
+      data => {
+        console.log("Retrived countries: " + JSON.stringify(data));
+        this.countries = data;
+      }
+    )
   }
 
   copyShippingAddressToBillingAddress(event) {
     if (event.target.checked) {
-      this.checkoutFormGroup.controls['billingAddress']
-          .setValue(this.checkoutFormGroup.controls['shippingAddress'].value);
+      // Create a new object for billingAddress by copying values from shippingAddress
+      this.checkoutFormGroup.controls['billingAddress'].setValue(
+        { ...this.checkoutFormGroup.controls['shippingAddress'].value }
+      );
+  
+      // Copy the list of states from shippingAddress to billingAddress
+      this.billingAddressStates = [...this.shippingAddressStates];
     } else {
+      // Reset the billing address fields when the checkbox is unchecked
       this.checkoutFormGroup.controls['billingAddress'].reset();
+  
+      // Clear the billing states to prevent incorrect selections
+      this.billingAddressStates = [];
     }
   }
 
@@ -116,6 +140,29 @@ export class CheckoutComponent implements OnInit{
             console.log("Retrieved credit card months: " + JSON.stringify(data));
             this.creditCardMonths = data;
         }
+    );
+  }
+
+  getStates(formGroupName: string) {
+    const FormGroup = this.checkoutFormGroup.get(formGroupName);
+
+    const countryCode = FormGroup.value.country.code;
+    const countryName = FormGroup.value.country.name;
+
+    console.log(`{formGroupName} country code: ${countryCode}`);
+    console.log(`{formGroupName} country name: ${countryName}`);
+
+    this.snapShopFormService.getStates(countryCode).subscribe(
+      data => {
+        if (formGroupName === 'shippingAddress') {
+          this.shippingAddressStates = data;
+        } else {
+          this.billingAddressStates = data;
+        }
+
+        // select first item by default
+        FormGroup.get('state').setValue(data[0]);
+      }
     );
   }
 }
