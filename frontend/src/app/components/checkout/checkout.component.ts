@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { SnapShopFormService } from '../../services/snap-shop-form.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
+import { SnapShopValidators } from '../../validators/snap-shop-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -12,7 +13,7 @@ import { State } from '../../common/state';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent implements OnInit{
+export class CheckoutComponent implements OnInit {
 
   checkoutFormGroup!: FormGroup;
 
@@ -28,15 +29,19 @@ export class CheckoutComponent implements OnInit{
   billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
-              private snapShopFormService: SnapShopFormService) {};
+    private snapShopFormService: SnapShopFormService) { };
 
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
-        lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
-        email: new FormControl('', [Validators.required, 
-                              Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
+        firstName: new FormControl('', [Validators.required,
+                                        Validators.minLength(2),
+                                        SnapShopValidators.notOnlyWhiteSpace]),
+        lastName: new FormControl('', [Validators.required,
+                                       Validators.minLength(2),
+                                       SnapShopValidators.notOnlyWhiteSpace]),
+        email: new FormControl('', [Validators.required,
+                                    Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
         ])
       }),
       shippingAddress: this.formBuilder.group({
@@ -91,15 +96,15 @@ export class CheckoutComponent implements OnInit{
     )
   }
 
-  get firstName() {
+  public get firstName() {
     return this.checkoutFormGroup.get('customer.firstName');
   }
 
-  get lastName() {
+  public get lastName() {
     return this.checkoutFormGroup.get('customer.lastName');
   }
 
-  get email() {
+  public get email() {
     return this.checkoutFormGroup.get('customer.email');
   }
 
@@ -109,13 +114,13 @@ export class CheckoutComponent implements OnInit{
       this.checkoutFormGroup.controls['billingAddress'].setValue(
         { ...this.checkoutFormGroup.controls['shippingAddress'].value }
       );
-  
+
       // Copy the list of states from shippingAddress to billingAddress
       this.billingAddressStates = [...this.shippingAddressStates];
     } else {
       // Reset the billing address fields when the checkbox is unchecked
       this.checkoutFormGroup.controls['billingAddress'].reset();
-  
+
       // Clear the billing states to prevent incorrect selections
       this.billingAddressStates = [];
     }
@@ -125,12 +130,12 @@ export class CheckoutComponent implements OnInit{
     console.log("Handling the submit buutton");
 
     if (this.checkoutFormGroup.invalid) {
-      this.checkoutFormGroup.markAllAsTouched();     
+      this.checkoutFormGroup.markAllAsTouched();
     }
 
     console.log(this.checkoutFormGroup.get('customer')?.value);
     console.log("The email address is " + this.checkoutFormGroup.get('customer')?.value.email);
-    
+
     console.log("The shipping address country is " + this.checkoutFormGroup.get('shippingAddress').value.country.name);
     console.log("The shipping address state is " + this.checkoutFormGroup.get('shippingAddress').value.state.name);
   }
@@ -143,25 +148,25 @@ export class CheckoutComponent implements OnInit{
     let startMonth: number;
 
     if (currentYear === selectedYear) {
-        // If the selected year is the current year, set the start month to the current month
-        startMonth = new Date().getMonth() + 1;
-        
-        // Reset the selected month if it is earlier than the allowed start month
-        const selectedMonth = Number(creditCardFormGroup.value.expirationMonth);
-        if (selectedMonth < startMonth) {
-            creditCardFormGroup.patchValue({ expirationMonth: startMonth });
-        }
+      // If the selected year is the current year, set the start month to the current month
+      startMonth = new Date().getMonth() + 1;
+
+      // Reset the selected month if it is earlier than the allowed start month
+      const selectedMonth = Number(creditCardFormGroup.value.expirationMonth);
+      if (selectedMonth < startMonth) {
+        creditCardFormGroup.patchValue({ expirationMonth: startMonth });
+      }
     } else {
-        // If a future year is selected, allow all months
-        startMonth = 1;
+      // If a future year is selected, allow all months
+      startMonth = 1;
     }
 
     // Fetch and update the list of available credit card months
     this.snapShopFormService.getCreditCardMonths(startMonth).subscribe(
-        data => {
-            console.log("Retrieved credit card months: " + JSON.stringify(data));
-            this.creditCardMonths = data;
-        }
+      data => {
+        console.log("Retrieved credit card months: " + JSON.stringify(data));
+        this.creditCardMonths = data;
+      }
     );
   }
 
