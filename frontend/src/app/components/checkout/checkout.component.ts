@@ -71,41 +71,24 @@ export class CheckoutComponent implements OnInit {
                                       SnapShopValidators.notOnlyWhiteSpace])
       }),
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
-        expirationMonth: [''],
-        expirationYear: ['']
+        cardType: new FormControl('', [Validators.required]),
+        nameOnCard: new FormControl('', [Validators.required,
+                                         Validators.minLength(2),
+                                         SnapShopValidators.notOnlyWhiteSpace]),
+        cardNumber: new FormControl('', [Validators.required,
+                                         Validators.pattern('^([0-9]{4}\\s?){3}[0-9]{4}$|^([0-9]{4}\\s?){2}[0-9]{5}$|^[0-9]{13,19}$'),
+                                         SnapShopValidators.luhnCheck]),
+        securityCode: new FormControl('', [Validators.required,
+                                           Validators.pattern('[0-9]{3}')]),
+        expirationMonth: new FormControl('', [Validators.required]),
+        expirationYear: new FormControl('', [Validators.required])
       })
     });
 
-    // populate credit card months
-    const startMonth: number = new Date().getMonth() + 1;
-    console.log("startMonth: " + startMonth);
+    this.detectCardType();
 
-    this.snapShopFormService.getCreditCardMonths(startMonth).subscribe(
-      data => {
-        console.log("Retrived credit card months: " + JSON.stringify(data));
-        this.creditCardMonths = data;
-      }
-    );
+    this.initializeFormOptions();
 
-    // populate credit card years
-    this.snapShopFormService.getCreditCardYears().subscribe(
-      data => {
-        console.log("Retrieved credit card years: " + JSON.stringify(data));
-        this.creditCardYears = data;
-      }
-    );
-
-    // populate countries
-    this.snapShopFormService.getCountries().subscribe(
-      data => {
-        console.log("Retrived countries: " + JSON.stringify(data));
-        this.countries = data;
-      }
-    )
   }
 
   public get firstName() {
@@ -149,6 +132,100 @@ export class CheckoutComponent implements OnInit {
   }
   public get billingAddressCountry() {
     return this.checkoutFormGroup.get('billingAddress.country');
+  }
+
+  public get creditCardType() {
+    return this.checkoutFormGroup.get('creditCard.cardType');
+  }
+  public get creditCardNameOnCard() {
+    return this.checkoutFormGroup.get('creditCard.nameOnCard');
+  }
+  public get creditCardNumber() {
+    return this.checkoutFormGroup.get('creditCard.cardNumber');
+  }
+  public get creditCardSecurityCode() {
+    return this.checkoutFormGroup.get('creditCard.securityCode');
+  }
+  public get creditCardExpirationMonth() {
+  return this.checkoutFormGroup.get('creditCard.expirationMonth');
+  }
+  public get creditCardExpirationYear() {
+  return this.checkoutFormGroup.get('creditCard.expirationYear');
+  }
+
+  detectCardType(): void {
+    const cardNumberControl = this.checkoutFormGroup.get('creditCard.cardNumber');
+    const cardTypeControl = this.checkoutFormGroup.get('creditCard.cardType');
+
+    cardNumberControl?.valueChanges.subscribe((rawValue: string) => {
+      if (rawValue === null || rawValue === undefined) return;
+
+      // Remove all non-digit characters
+      const digitsOnly = rawValue.replace(/\D+/g, '');
+
+      // Format: insert a space every 4 digits
+      const formatted = digitsOnly.match(/.{1,4}/g)?.join(' ') ?? '';
+
+      // Update the control with the formatted value, without emitting another event
+      if (rawValue !== formatted) {
+        cardNumberControl.setValue(formatted, { emitEvent: false });
+      }
+
+      // Detect card type based on first digit(s)
+      const firstDigit = digitsOnly.charAt(0);
+      const firstTwoDigits = parseInt(digitsOnly.substring(0, 2), 10);
+      const currentType = cardTypeControl?.value;
+
+      let detectedType = '';
+
+      if (firstDigit === '4') {
+        detectedType = 'Visa';
+      } else if (
+        (firstTwoDigits >= 51 && firstTwoDigits <= 55) ||
+        (firstTwoDigits >= 22 && firstTwoDigits <= 27)
+      ) {
+        detectedType = 'Mastercard';
+      }
+
+      // Set the card type only if it's different from the current value
+      if (detectedType !== currentType) {
+        cardTypeControl?.setValue(detectedType, { emitEvent: false });
+      }
+
+      // If no digits remain, clear the card type
+      if (!digitsOnly) {
+        cardTypeControl?.setValue('', { emitEvent: false });
+      }
+    });
+  }
+
+  private initializeFormOptions(): void {
+    // populate credit card months
+    const startMonth: number = new Date().getMonth() + 1;
+    console.log("startMonth: " + startMonth);
+
+    this.snapShopFormService.getCreditCardMonths(startMonth).subscribe(
+      data => {
+        console.log("Retrived credit card months: " + JSON.stringify(data));
+        this.creditCardMonths = data;
+      }
+    );
+
+    // populate credit card years
+    this.snapShopFormService.getCreditCardYears().subscribe(
+      data => {
+        console.log("Retrieved credit card years: " + JSON.stringify(data));
+        this.creditCardYears = data;
+      }
+    );
+
+    // populate countries
+    this.snapShopFormService.getCountries().subscribe(
+      data => {
+        console.log("Retrived countries: " + JSON.stringify(data));
+        this.countries = data;
+      }
+    )
   }
 
   copyShippingAddressToBillingAddress(event) {
