@@ -8,7 +8,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class CartService {
 
   cartItems: CartItem[] = [];
-  
+
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
 
@@ -17,7 +17,7 @@ export class CartService {
   addToCart(theCartItem: CartItem) {
     // Check if the item already exists in the cart
     let existingCartItem = this.cartItems.find(item => item.id === theCartItem.id);
-  
+
     if (existingCartItem) {
       // If found, increment the quantity
       existingCartItem.quantity++;
@@ -25,10 +25,10 @@ export class CartService {
       // If not found, add the item to the cart
       this.cartItems.push(theCartItem);
     }
-  
+
     // Compute the total price and quantity for the cart
     this.computeCartTotals();
-  }  
+  }
 
   computeCartTotals() {
     let totalPriceValue: number = 0;
@@ -70,7 +70,7 @@ export class CartService {
 
   remove(theCartItem: CartItem) {
     // get index of item in the array
-    const itemIndex = this.cartItems.findIndex( tempCartItem => tempCartItem.id === tempCartItem.id );
+    const itemIndex = this.cartItems.findIndex( tempCartItem => tempCartItem.id === theCartItem.id );
 
     // if found, remove the item from the array at the given index
     if (itemIndex > -1) {
