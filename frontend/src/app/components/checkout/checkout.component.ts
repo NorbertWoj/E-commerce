@@ -5,6 +5,7 @@ import { SnapShopFormService } from '../../services/snap-shop-form.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
 import { SnapShopValidators } from '../../validators/snap-shop-validators';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -29,9 +30,13 @@ export class CheckoutComponent implements OnInit {
   billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
-    private snapShopFormService: SnapShopFormService) { };
+    private snapShopFormService: SnapShopFormService,
+    private cartService: CartService) { };
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+
+    this.reviewCartDetails();
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [Validators.required,
@@ -311,5 +316,19 @@ export class CheckoutComponent implements OnInit {
         FormGroup.get('state').setValue(data[0]);
       }
     );
+  }
+
+  reviewCartDetails() {
+
+    // subscribe to cartService.totalQuantity
+    this.cartService.totalQuantity.subscribe(
+      totalQuantity => this.totalQuantity = totalQuantity
+    );
+
+    // subscribe to cartService.totalPrice
+    this.cartService.totalPrice.subscribe(
+      totalPrice => this.totalPrice = totalPrice
+    );
+
   }
 }
