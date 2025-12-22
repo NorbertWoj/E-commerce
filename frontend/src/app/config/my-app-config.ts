@@ -1,7 +1,7 @@
 export default {
   auth: {
     domain: "norwoj.us.auth0.com",
-    clientId: "njX8CMxC6O8yuWHbM8gv2yHrC0LNW7IH",
+    clientId: "fID6T0yQ0MEeOZSNrz8AEm3oZprU2FOF",
     authorizationParams: {
       redirect_uri: "http://localhost:4200",
       audience: "http://localhost:8080",

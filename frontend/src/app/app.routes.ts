@@ -3,9 +3,12 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { LoginStatusComponent } from './components/login-status/login-status.component';
+import { authGuardFn } from '@auth0/auth0-angular';
 
 export const routes: Routes = [
-    {path: 'checkout', component: CheckoutComponent},
+    {path: 'login', component: LoginStatusComponent},
+    {path: 'checkout', component: CheckoutComponent, canActivate: [authGuardFn]},
     {path: 'cart-details', component: CartDetailsComponent},
     {path: 'products/:id', component: ProductDetailsComponent},
     {path: 'search/:keyword', component: ProductListComponent},
