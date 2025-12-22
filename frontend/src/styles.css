@@ -1,8 +1,12 @@
+/*
+ * ----------------------------
+ * Common CSS
+ * ----------------------------
+ */
+
  *{
     margin:0;
     padding:0;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
     box-sizing:border-box
 }
 
@@ -116,7 +120,7 @@ a,a:hover{
 
 aside.menu-sidebar.d-none.d-lg-block.clr{
     background:0 0;
-    z-index:99999999;
+    z-index:9999;
     height:75px;
     box-shadow:-2px 0 4px #0000003b
 }
@@ -146,10 +150,7 @@ aside.menu-sidebar.d-none.d-lg-block.clr{
     top:50%;
     left:0;
     right:0;
-    -webkit-transform:translateY(-50%);
-    -moz-transform:translateY(-50%);
     -ms-transform:translateY(-50%);
-    -o-transform:translateY(-50%);
     transform:translateY(-50%)
 }
 
@@ -208,7 +209,8 @@ section{
 }
 
 .au-input-xl{
-    min-width:935px
+    min-width:535px;
+    max-width: 835px;
 }
 
 input.au-input.au-input-xl{
@@ -294,10 +296,7 @@ input.au-input.au-input-xl{
     position:absolute;
     top:50%;
     left:50%;
-    -webkit-transform:translate(-50%,-50%);
-    -moz-transform:translate(-50%,-50%);
     -ms-transform:translate(-50%,-50%);
-    -o-transform:translate(-50%,-50%);
     transform:translate(-50%,-50%)
 }
 
@@ -654,10 +653,7 @@ label.date{
     -webkit-border-radius:2px;
     -moz-border-radius:2px;
     border-radius:2px;
-    -webkit-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
     -ms-transform:rotate(45deg);
-    -o-transform:rotate(45deg);
     transform:rotate(45deg)
 }
  @page option:first{
@@ -713,8 +709,10 @@ table.table.table-bordered th{
     font-weight:800;
     color:#0da8e4
 }
+
 .detail-section{
-    margin-top:60px
+    margin-top:60px;
+    min-height: 80vh;
 }
 
 .detail-img{
@@ -753,35 +751,35 @@ a.primary-btn:hover{
   font-weight: bold;
 }
 
-.link-style {
-    cursor: pointer;
-    text-decoration: underline;
-    color: blue;
-  }
-
 /*
  * ----------------------------
  * Footer section
  * ----------------------------
  */
 
-footer ul li a{
-    color:#fff
+footer {
+    background: #232324;
+    text-align: center;
+    padding: 15px 0;
 }
-footer{
-    background:#232324;
-    z-index:1;
-    position:relative;
-    text-align:center
+
+footer ul {
+    list-style: none;
 }
-footer li a{
-    color:#313131;
-    font-weight:500
+
+footer ul li {
+    display: inline-block;
+    padding: 10px 20px;
 }
-footer ul li{
-    display:inline-block;
-    font-size:14px;
-    padding:10px 20px
+
+footer ul li a {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+footer ul li a:hover {
+    color: #00ad5f;
 }
 
 /*
