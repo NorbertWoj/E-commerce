@@ -5,8 +5,10 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 import { authGuardFn } from '@auth0/auth0-angular';
+import { MembersPageComponent } from './components/members-page/members-page.component';
 
 export const routes: Routes = [
+    {path: 'members', component: MembersPageComponent, canActivate: [authGuardFn]},
     {path: 'login', component: LoginStatusComponent},
     {path: 'checkout', component: CheckoutComponent, canActivate: [authGuardFn]},
     {path: 'cart-details', component: CartDetailsComponent},
