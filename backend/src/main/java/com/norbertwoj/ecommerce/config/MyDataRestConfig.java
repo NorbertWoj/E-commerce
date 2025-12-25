@@ -1,9 +1,6 @@
 package com.norbertwoj.ecommerce.config;
 
-import com.norbertwoj.ecommerce.entity.Country;
-import com.norbertwoj.ecommerce.entity.Product;
-import com.norbertwoj.ecommerce.entity.ProductCategory;
-import com.norbertwoj.ecommerce.entity.State;
+import com.norbertwoj.ecommerce.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         // disable HTTP methods for ProductCategory: PUT, POST and Delete
         disableHttpMethods(State.class, config, theUnsupportedActions);
+
+        // disable HTTP methods for Order: PUT, POST and Delete
+        disableHttpMethods(Order.class, config, theUnsupportedActions);
 
         // call an internal helper method
         exposeIds(config);
