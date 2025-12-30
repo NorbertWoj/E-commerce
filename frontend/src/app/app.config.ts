@@ -1,25 +1,31 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'; //remplace HttpClienModule pour Angular 18
-import { provideAuth0 } from '@auth0/auth0-angular';
+import { provideHttpClient, withInterceptors } from '@angular/common/http'; //remplace HttpClienModule pour Angular 18
+import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { routes } from './app.routes';
-import myAppConfig from './config/my-app-config';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAuth0({
-      domain: myAppConfig.auth.domain,
-      clientId: myAppConfig.auth.clientId,
+      domain: 'norwoj.us.auth0.com',
+      clientId: 'fID6T0yQ0MEeOZSNrz8AEm3oZprU2FOF',
       authorizationParams: {
-        redirect_uri: myAppConfig.auth.authorizationParams.redirect_uri || window.location.origin,
-        audience: myAppConfig.auth.authorizationParams.audience,
+        redirect_uri: 'http://localhost:4200',
+        audience: 'http://localhost:8080',
         scope: 'openid profile email'
       },
       httpInterceptor: {
-        allowedList: myAppConfig.httpInterceptor.allowedList
+        allowedList: [
+          'http://localhost:8080/api/orders/*',
+          'http://localhost:8080/api/checkout/*'
+        ]
       }
     }),
-    provideHttpClient(withInterceptorsFromDi()),
+
+    provideHttpClient(
+      withInterceptors([authHttpInterceptorFn])
+    )
   ]
 };
