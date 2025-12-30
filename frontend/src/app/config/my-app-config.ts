@@ -9,8 +9,20 @@ export default {
   },
   httpInterceptor: {
     allowedList: [
-      'http://localhost:8080/api/orders/**',
-      'http://localhost:8080/api/checkout/purchase'
-    ],
+      {
+        uri: 'http://localhost:8080/api/orders/**',
+        authorizationParams: {
+          audience: 'http://localhost:8080',
+          scope: 'openid profile email'
+        }
+      },
+      {
+        uri: 'http://localhost:8080/api/checkout/purchase',
+        authorizationParams: {
+          audience: 'http://localhost:8080',
+          scope: 'openid profile email'
+        }
+      }
+    ]
   },
 }
