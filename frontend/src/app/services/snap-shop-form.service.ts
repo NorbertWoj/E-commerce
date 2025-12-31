@@ -3,14 +3,15 @@ import { Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { Country } from '../common/country';
 import { State } from '../common/state';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SnapShopFormService {
 
-  private countriesUrl = 'http://localhost:8080/api/countries';
-  private statesUrl = 'http://localhost:8080/api/states';
+  private countriesUrl = `${environment.api.baseUrl}/api/countries`;
+  private statesUrl = `${environment.api.baseUrl}/api/states`;
 
   constructor(private httpClient: HttpClient) { }
 

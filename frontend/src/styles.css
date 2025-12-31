@@ -131,7 +131,7 @@ aside.menu-sidebar.d-none.d-lg-block.clr{
  * ----------------------------
  */
 
-.header-desktop{
+/* .header-desktop{
     background:#0da8e4;
     -webkit-box-shadow:0 2px 5px 0 rgba(0,0,0,.1);
     -moz-box-shadow:0 2px 5px 0 rgba(0,0,0,.1);
@@ -142,9 +142,24 @@ aside.menu-sidebar.d-none.d-lg-block.clr{
     left:200px;
     height:75px;
     z-index:3
+} */
+
+.header-desktop {
+    background: #0da8e4;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 200px;
+    z-index: 3;
+    height: auto; /* <- zamiast 75px */
+    padding: 10px 20px; /* daj trochę przestrzeni wewnątrz */
+    display: flex;
+    align-items: center; /* wyrównuje w pionie */
+    justify-content: space-between;
 }
 
-.header-desktop .section-content{
+/* .header-desktop .section-content{
     overflow:visible;
     position:absolute;
     top:50%;
@@ -152,6 +167,17 @@ aside.menu-sidebar.d-none.d-lg-block.clr{
     right:0;
     -ms-transform:translateY(-50%);
     transform:translateY(-50%)
+} */
+
+.header-desktop .section-content {
+    /* Usuń */
+    /* position: absolute;
+       top: 50%;
+       transform: translateY(-50%); */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .header-wrap{
@@ -209,7 +235,7 @@ section{
 }
 
 .au-input-xl{
-    min-width:535px;
+    min-width: 435px;
     max-width: 835px;
 }
 
@@ -874,7 +900,9 @@ footer ul li a:hover {
         position:relative;
         top:0;
         left:0;
-        height:80px
+        flex-direction: column;
+        align-items: flex-start;
+        height:auto
     }
     .header-wrap{
         -webkit-box-orient:vertical;
@@ -883,10 +911,11 @@ footer ul li a:hover {
         -moz-box-orient:vertical;
         -moz-box-direction:normal;
         -ms-flex-direction:column;
-        flex-direction:column
+        flex-direction:column;
+        align-items: flex-start;
     }
     .header-button{
-        margin-top:30px;
+        margin-top:10px;
         width:100%;
         -webkit-box-pack:justify;
         -webkit-justify-content:space-between;
