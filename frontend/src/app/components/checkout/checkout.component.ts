@@ -11,6 +11,8 @@ import { Router, RouterLink } from '@angular/router';
 import { Order } from '../../common/order';
 import { OrderItem } from '../../common/order-item';
 import { Purchase } from '../../common/purchase';
+import { environment } from '../../../environments/environment';
+import { PaymentInfo } from '../../common/payment-info';
 
 @Component({
   selector: 'app-checkout',
@@ -26,8 +28,8 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number = 0;
   totalQuantity: number = 0;
 
-  creditCardYears: number[] = [];
-  creditCardMonths: number[] = [];
+  //creditCardYears: number[] = [];
+  //creditCardMonths: number[] = [];
 
   countries: Country[] = [];
 
@@ -35,6 +37,14 @@ export class CheckoutComponent implements OnInit {
   billingAddressStates: State[] = [];
 
   storage: Storage = sessionStorage;
+
+  // initialize Stripe API
+  stripe = Stripe(environment.stripePublishableKey);
+
+  paymentInfo: PaymentInfo = new PaymentInfo();
+  cardElement: any;
+  displayError: any = "";
+
 
   constructor(private formBuilder: FormBuilder,
               private snapShopFormService: SnapShopFormService,
@@ -44,8 +54,11 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void { 
 
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
+    // setup Stripe payment form
+    this.setupStripePaymentForm();
+
+    //const currentMonth = new Date().getMonth() + 1;
+    //const currentYear = new Date().getFullYear();
     
     this.reviewCartDetails();
 
@@ -91,7 +104,7 @@ export class CheckoutComponent implements OnInit {
                                       SnapShopValidators.notOnlyWhiteSpace])
       }),
       creditCard: this.formBuilder.group({
-        cardType: new FormControl('', [Validators.required]),
+        /*cardType: new FormControl('', [Validators.required]),
         nameOnCard: new FormControl('', [Validators.required,
                                          Validators.minLength(2),
                                          SnapShopValidators.notOnlyWhiteSpace]),
@@ -102,10 +115,11 @@ export class CheckoutComponent implements OnInit {
                                            Validators.pattern('[0-9]{3}')]),
         expirationMonth: new FormControl(currentMonth, [Validators.required]),
         expirationYear: new FormControl(currentYear, [Validators.required])
+        */
       })
     });
 
-    this.detectCardType();
+    //this.detectCardType();
 
     this.initializeFormOptions();
 
@@ -177,6 +191,7 @@ export class CheckoutComponent implements OnInit {
     return this.cartService.cartItems;
   }
 
+  /*
   detectCardType(): void {
     const cardNumberControl = this.checkoutFormGroup.get('creditCard.cardNumber');
     const cardTypeControl = this.checkoutFormGroup.get('creditCard.cardType');
@@ -222,8 +237,36 @@ export class CheckoutComponent implements OnInit {
       }
     });
   }
+  */
+
+  setupStripePaymentForm() {
+    // get a handle to stripe elements
+    var elements = this.stripe.elements();
+
+    // Create a card element ... and hide the zip-code field
+    this.cardElement = elements.create('card', { hidePostalCode: true });
+
+    // Add an instance of card UI component into the 'card-element' div
+    this.cardElement.mount('#card-element');
+
+    // Add event binding for the 'change' event on the card element
+    this.cardElement.on('change', (event: any) => {
+
+      // get a handle to card-errors element
+      this.displayError = document.getElementById('card-errors');
+
+      if (event.complete) {
+        this.displayError.textContent = "";
+      } else if (event.error) {
+        // show validation error to customer
+        this.displayError.textContent = event.error.message;
+      }
+
+    });
+  }
 
   private initializeFormOptions(): void {
+    /*
     // populate credit card months
     const startMonth: number = new Date().getMonth() + 1;
     //console.log("startMonth: " + startMonth);
@@ -242,6 +285,7 @@ export class CheckoutComponent implements OnInit {
         this.creditCardYears = data;
       }
     );
+    */
 
     // populate countries
     this.snapShopFormService.getCountries().subscribe(
@@ -286,8 +330,8 @@ export class CheckoutComponent implements OnInit {
 }
 
   onSubmit() {
-    console.log("Handling the submit buutton");
-    console.log("Form valid?", this.checkoutFormGroup.valid);
+    //console.log("Handling the submit buutton");
+    //console.log("Form valid?", this.checkoutFormGroup.valid);
   
     if (this.checkoutFormGroup.invalid) {
       console.log("Form is INVALID - showing errors:");
@@ -349,6 +393,52 @@ export class CheckoutComponent implements OnInit {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
+    // compute payment info
+    this.paymentInfo.amount = Math.round(this.totalPrice * 100);
+    this.paymentInfo.currency = "USD";
+
+    console.log(`this.paymentInfo.amount: ${this.paymentInfo.amount}`);
+    // if valid form then
+    // - create payment intent
+    // - confirm card payment
+    // - place order
+
+    if (!this.checkoutFormGroup.invalid && this.displayError.textContent === "") {
+
+      this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
+        (paymentIntentResponse) => {
+          this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
+            {
+              payment_method: {
+                card: this.cardElement
+              }
+            }, { handleActions: false })
+          .then((result: any) => {
+            if (result.error) {
+              // inform the customer there was an error
+              alert(`There was an error: ${result.error.message}`);
+            } else {
+              // call REST API via the CheckoutService
+              this.checkoutService.placeOrder(purchase).subscribe({
+                next: (response: any) => {
+                  alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+
+                  // reset cart
+                  this.resetCart();
+                },
+                error: (err: any) => {
+                  alert(`There was an error: ${err.message}`);
+                }
+              })
+            }            
+          });
+        }
+      );
+    } else {
+      this.checkoutFormGroup.markAllAsTouched();
+      return;
+    }
+    /*
     // call REST API via the CheckoutService
     this.checkoutService.placeOrder(purchase).subscribe(
       {
@@ -364,6 +454,7 @@ export class CheckoutComponent implements OnInit {
         }
       }
     );
+    */
 
     //console.log(this.checkoutFormGroup.get('customer')?.value);
     //console.log("The email address is " + this.checkoutFormGroup.get('customer')?.value.email);
@@ -377,6 +468,7 @@ export class CheckoutComponent implements OnInit {
     this.cartService.cartItems = [];
     this.cartService.totalPrice.next(0);
     this.cartService.totalQuantity.next(0);
+    this.cartService.persistCartItems();
 
     // reset the form
     this.checkoutFormGroup.reset();
@@ -385,6 +477,7 @@ export class CheckoutComponent implements OnInit {
     this.router.navigateByUrl("/products");
   }
 
+  /*
   handleMonthsAndYears() {
     const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
     const currentYear: number = new Date().getFullYear();
@@ -414,6 +507,7 @@ export class CheckoutComponent implements OnInit {
       }
     );
   }
+  */
 
   getStates(formGroupName: string) {
     const FormGroup = this.checkoutFormGroup.get(formGroupName);
